@@ -1,0 +1,114 @@
+import time
+import tracemalloc
+
+
+# ==========================================================
+# PARTE 1 — EJERCICIO 1.1 — OPERACIONES O(1)
+# ==========================================================
+
+def es_par(n):
+    return n % 2 == 0
+
+
+def ultimo_digito(n):
+    return abs(n) % 10
+
+
+def mayor(a, b):
+    if a > b:
+        return a
+    return b
+
+
+print("\n=== PARTE 1 — OPERACIONES O(1) ===")
+print("¿10 es par?:", es_par(10))
+print("Último dígito de 12345:", ultimo_digito(12345))
+print("Mayor entre 8 y 15:", mayor(8, 15))
+
+
+# ==========================================================
+# PARTE 2 — EJERCICIO 2.1 — BÚSQUEDA LINEAL
+# ==========================================================
+
+def busqueda_lineal(lista, objetivo):
+    comparaciones = 0
+    for i in range(len(lista)):
+        comparaciones += 1
+        if lista[i] == objetivo:
+            return i, comparaciones
+    return -1, comparaciones
+
+
+print("\n=== PARTE 2 — BÚSQUEDA LINEAL ===")
+n = 10000
+lista = list(range(n))
+
+_, comp_mejor = busqueda_lineal(lista, lista[0])
+_, comp_promedio = busqueda_lineal(lista, lista[n // 2])
+_, comp_peor = busqueda_lineal(lista, -1)
+
+print(f"Tamaño n = {n}")
+print(f"Mejor caso: {comp_mejor} comparaciones → O(1)")
+print(f"Caso promedio: {comp_promedio} comparaciones → O(n)")
+print(f"Peor caso: {comp_peor} comparaciones → O(n)")
+
+
+# ==========================================================
+# PARTE 3 — EJERCICIO 3.1 — MEDICIÓN DE TIEMPO
+# ==========================================================
+
+def medir_tiempo(funcion, lista, objetivo, repeticiones=100):
+    inicio = time.perf_counter()
+    for _ in range(repeticiones):
+        funcion(lista, objetivo)
+    fin = time.perf_counter()
+    return (fin - inicio) / repeticiones * 1000
+
+
+print("\n=== PARTE 3 — MEDICIÓN DE TIEMPO (BÚSQUEDA LINEAL) ===")
+tamaños = [1000, 10000, 100000]
+
+print(f"{'n':>10} {'Tiempo (ms)':>15}")
+print("-" * 30)
+
+for n in tamaños:
+    lista = list(range(n))
+    tiempo = medir_tiempo(busqueda_lineal, lista, -1)
+    print(f"{n:>10} {tiempo:>15.5f}")
+
+print("\nConclusión: El tiempo crece proporcionalmente a n → O(n)")
+
+
+# ==========================================================
+# PARTE 3 — EJERCICIO 3.2 — MEDICIÓN DE MEMORIA
+# ==========================================================
+
+def cuadrados_lista(n):
+    return [i**2 for i in range(1, n + 1)]
+
+
+def cuadrados_generador(n):
+    for i in range(1, n + 1):
+        yield i**2
+
+
+print("\n=== PARTE 3 — MEDICIÓN DE MEMORIA ===")
+n = 100000
+
+tracemalloc.start()
+lista = cuadrados_lista(n)
+current, peak_lista = tracemalloc.get_traced_memory()
+tracemalloc.stop()
+
+tracemalloc.start()
+gen = cuadrados_generador(n)
+lista_gen = list(gen)
+current, peak_gen = tracemalloc.get_traced_memory()
+tracemalloc.stop()
+
+print(f"Memoria usando lista: {peak_lista / 1024 / 1024:.2f} MB")
+print(f"Memoria usando generador: {peak_gen / 1024 / 1024:.2f} MB")
+
+print("\nConclusión:")
+print("Lista → O(n) espacio")
+print("Generador → O(1) espacio estructural")

@@ -1,2 +1,0 @@
-# Matenme
-Taller de algoritmos

@@ -1,0 +1,24 @@
+#include <iostream>
+using namespace std;
+
+int main() {
+    int n, lista[100]; // Arreglo con espacio suficiente
+
+    cout << "Tamano del arreglo: ";
+    cin >> n;
+
+    for (int i = 0; i < n; i++) {
+        cout << "Valor " << i + 1 << ": ";
+        cin >> lista[i];
+    }
+
+    cout << "\nCombinaciones:\n";
+    for (int i = 0; i < n; i++) {
+        for (int j = 0; j < n; j++) {
+            cout << lista[i] << "-" << lista[j] << " ";
+        }
+        cout << endl;
+    }
+
+    return 0;
+}

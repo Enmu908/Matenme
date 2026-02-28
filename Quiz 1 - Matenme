@@ -22,3 +22,5 @@ int main() {
 
     return 0;
 }
+
+// Se trata de una complejidad O(n^2) por los for anidados en la linea 16 que son los encargados de crear la lista de numeros al final

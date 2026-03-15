@@ -1,0 +1,236 @@
+// 0Ejercicio 1
+
+/* T(n) = 2T(n/2) + θ(1)
+a = 2
+b = 2
+K = 0
+α = Log b^a = Log 2^2 = 1
+α > K ----> θ(n^α)
+T(n) = θ(n) */
+
+def suma_arreglo(arr, inicio, fin):
+    if inicio == fin:
+        return arr[inicio]
+
+    medio = (inicio + fin) // 2
+
+    izquierda = suma_arreglo(arr, inicio, medio)
+    derecha = suma_arreglo(arr, medio + 1, fin)
+
+    return izquierda + derecha
+
+
+arr = [1,2,3,4,5]
+print(suma_arreglo(arr,0,len(arr)-1))
+
+// Ejercicio 2
+
+/* T(n) = 2T(n/2) + θ(1)
+a = 2
+b = 2
+K = 0
+α = Log b^a = Log 2^2 = 1
+α > K ----> θ(n^α)
+T(n) = θ(n) */
+
+def max_min(arr, inicio, fin):
+
+    if inicio == fin:
+        return arr[inicio], arr[inicio]
+
+    if fin == inicio + 1:
+        if arr[inicio] < arr[fin]:
+            return arr[inicio], arr[fin]
+        else:
+            return arr[fin], arr[inicio]
+
+    medio = (inicio + fin) // 2
+
+    min1, max1 = max_min(arr, inicio, medio)
+    min2, max2 = max_min(arr, medio + 1, fin)
+
+    return min(min1,min2), max(max1,max2)
+
+
+arr = [5,3,9,1,7]
+print(max_min(arr,0,len(arr)-1))
+
+// Ejercicio 3
+
+/* T(n) = 3T(n/2) + θ(n)
+a = 3
+b = 2
+K = 1
+α = Log b^a = Log 2^3 ≈ 1.58
+α > K ----> θ(n^α)
+T(n) = θ(n^1.58) */
+
+def karatsuba(x, y):
+
+    if x < 10 or y < 10:
+        return x * y
+
+    n = max(len(str(x)), len(str(y)))
+    m = n // 2
+
+    a = x // 10**m
+    b = x % 10**m
+    c = y // 10**m
+    d = y % 10**m
+
+    ac = karatsuba(a,c)
+    bd = karatsuba(b,d)
+    ad_bc = karatsuba(a+b,c+d) - ac - bd
+
+    return ac*10**(2*m) + ad_bc*10**m + bd
+
+
+print(karatsuba(1234,5678))
+
+// EJercicio 4
+/* T(n) = T(n/2) + θ(1)
+a = 1
+b = 2
+K = 0
+α = Log b^a = Log 2^1 = 0
+α = K ----> θ(n^K Log n)
+T(n) = θ(Log n) */
+
+def potencia(a,b):
+
+    if b == 0:
+        return 1
+
+    mitad = potencia(a, b//2)
+
+    if b % 2 == 0:
+        return mitad * mitad
+    else:
+        return a * mitad * mitad
+
+
+print(potencia(2,10))
+
+// Ejercicio 5
+/* T(n) = 2T(n/2) + θ(n)
+a = 2
+b = 2
+K = 1
+α = Log b^a = Log 2^2 = 1
+α = K ----> θ(n^K Log n)
+T(n) = θ(n Log n) */
+
+def merge_sort(arr):
+
+    if len(arr) <= 1:
+        return arr
+
+    medio = len(arr)//2
+    izquierda = merge_sort(arr[:medio])
+    derecha = merge_sort(arr[medio:])
+
+    resultado = []
+    i=j=0
+
+    while i < len(izquierda) and j < len(derecha):
+
+        if izquierda[i] < derecha[j]:
+            resultado.append(izquierda[i])
+            i+=1
+        else:
+            resultado.append(derecha[j])
+            j+=1
+
+    resultado += izquierda[i:]
+    resultado += derecha[j:]
+
+    return resultado
+
+
+print(merge_sort([5,2,9,1,7]))
+
+// Ejercicio 6
+/* T(n) = 7T(n/2) + θ(n^2)
+a = 7
+b = 2
+K = 2
+α = Log b^a = Log 2^7 ≈ 2.81
+α > K ----> θ(n^α)
+T(n) = θ(n^2.81) */
+
+import numpy as np
+
+def strassen(A,B):
+
+    n = len(A)
+
+    if n == 1:
+        return A * B
+
+    mid = n//2
+
+    A11 = A[:mid,:mid]
+    A12 = A[:mid,mid:]
+    A21 = A[mid:,:mid]
+    A22 = A[mid:,mid:]
+
+    B11 = B[:mid,:mid]
+    B12 = B[:mid,mid:]
+    B21 = B[mid:,:mid]
+    B22 = B[mid:,mid:]
+
+    M1 = strassen(A11+A22, B11+B22)
+    M2 = strassen(A21+A22, B11)
+    M3 = strassen(A11, B12-B22)
+    M4 = strassen(A22, B21-B11)
+    M5 = strassen(A11+A12, B22)
+    M6 = strassen(A21-A11, B11+B12)
+    M7 = strassen(A12-A22, B21+B22)
+
+    C11 = M1+M4-M5+M7
+    C12 = M3+M5
+    C21 = M2+M4
+    C22 = M1-M2+M3+M6
+
+    C = np.vstack((np.hstack((C11,C12)), np.hstack((C21,C22))))
+
+    return C
+
+// Ejercicio 7
+/* T(n) = 2T(n/2) + θ(1)
+a = 2
+b = 2
+K = 0
+α = Log b^a = Log 2^2 = 1
+α > K ----> θ(n^α)
+T(n) = θ(n) */
+
+def buscar_matriz(matriz, x):
+
+    filas = len(matriz)
+    columnas = len(matriz[0])
+
+    i = 0
+    j = columnas - 1
+
+    while i < filas and j >= 0:
+
+        if matriz[i][j] == x:
+            return True
+
+        elif matriz[i][j] > x:
+            j -= 1
+
+        else:
+            i += 1
+
+    return False
+
+
+matriz = [
+[1,4,7],
+[2,5,8],
+[3,6,9]
+]
+
+print(buscar_matriz(matriz,5))
